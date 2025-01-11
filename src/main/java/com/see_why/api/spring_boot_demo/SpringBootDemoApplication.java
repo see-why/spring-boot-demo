@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/customers")
 public class SpringBootDemoApplication {
 
+	private final CustomerRepository customerRepository;
+
+	public SpringBootDemoApplication(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootDemoApplication.class, args);
 	}
@@ -34,7 +40,11 @@ public class SpringBootDemoApplication {
 
 	@GetMapping
 	public List<Customer> getCustomers() {
-		return List.of();
+		return customerRepository.findAll();
 	}
+
+    public CustomerRepository getCustomerRepository() {
+        return customerRepository;
+    }
 
 }
