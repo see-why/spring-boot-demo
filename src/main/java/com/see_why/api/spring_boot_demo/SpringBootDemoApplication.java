@@ -5,9 +5,12 @@ import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 
 @SpringBootApplication
@@ -41,6 +44,15 @@ public class SpringBootDemoApplication {
 	@GetMapping
 	public List<Customer> getCustomers() {
 		return customerRepository.findAll();
+	}
+
+	@PostMapping
+	public void addCustomer(@RequestBody NewCustomerRequest request) {
+		Customer customer = new Customer();
+		customer.setAge(request.age());
+		customer.setEmail(request.email());
+		customer.setName(request.name());
+		customerRepository.save(customer);
 	}
 
     public CustomerRepository getCustomerRepository() {
