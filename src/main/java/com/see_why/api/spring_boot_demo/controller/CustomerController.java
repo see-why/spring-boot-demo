@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.see_why.api.spring_boot_demo.Customer;
-import com.see_why.api.spring_boot_demo.CustomerRepository;
 import com.see_why.api.spring_boot_demo.NewCustomerRequest;
 import com.see_why.api.spring_boot_demo.WelcomeMessage;
+import com.see_why.api.spring_boot_demo.service.CustomerService;
 
 @RestController
 @RequestMapping("api/v1/customers")
 public class CustomerController {
 
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    public CustomerController(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @GetMapping("/")
@@ -36,35 +36,23 @@ public class CustomerController {
 
     @GetMapping
     public List<Customer> getCustomers() {
-        return customerRepository.findAll();
+        return customerService.getCustomers();
     }
 
     @PostMapping
     public void addCustomer(@RequestBody NewCustomerRequest request) {
-        Customer customer = new Customer();
-        customer.setAge(request.age());
-        customer.setEmail(request.email());
-        customer.setName(request.name());
-        customerRepository.save(customer);
+        customerService.addCustomer(request);
     }
 
     @DeleteMapping("{customerId}")
     public void deleteCustomer(@PathVariable("customerId") Integer id) {
-        Customer customer = customerRepository.findById(id)
-            .orElseThrow();
-        customerRepository.delete(customer);
+        customerService.deleteCustomer(id);
     }
 
     @PutMapping("{customerId}")
     public Customer updateCustomer(
             @PathVariable("customerId") Integer id,
             @RequestBody NewCustomerRequest request) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow();
-        customer.setName(request.name());
-        customer.setEmail(request.email());
-        customer.setAge(request.age());
-        customerRepository.save(customer);
-        return customer;
+        return customerService.updateCustomer(id, request);
     }
 } 
