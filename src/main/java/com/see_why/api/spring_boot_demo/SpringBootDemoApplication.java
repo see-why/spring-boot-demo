@@ -61,7 +61,9 @@ public class SpringBootDemoApplication {
 
 	@DeleteMapping("{customerId}")
 	public void deleteCustomer(@PathVariable("customerId") Integer id) {
-		customerRepository.deleteById(id);
+		Customer customer = customerRepository.findById(id)
+		.orElseThrow();
+		customerRepository.delete(customer);
 	}
 
 	@PutMapping("{customerId}")
